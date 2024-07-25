@@ -7,9 +7,10 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Card from './components/Card.js';
 import Detail from './routes/Detail.js';
 import Page_404 from './routes/Page_404.js';
+import axios from 'axios';
 
 function App() {
-  let [shoes] = useState(data)
+  let [shoes, setShoes] = useState(data)
   let navigate = useNavigate()
 
   return (
@@ -37,7 +38,7 @@ function App() {
                       {
                           shoes.map((a, i)=>{
                               return(
-                                  <Card shoes={shoes[i]} i={i}></Card>
+                                  <Card shoes={shoes[i]} i={i} key={i}></Card>
                               )
                           })
                       }
@@ -52,6 +53,24 @@ function App() {
                   </Row>
               </Container>
           </div>
+          <button onClick={()=>{
+            axios.get('https://codingapple1.github.io/shop/data2.json')
+              .then((res)=>{
+                let copy = [...shoes, ...res.data]
+                setShoes(copy)
+              })
+              .catch((err)=>{
+                console.log(err);
+              })
+
+              Promise.all([axios.get('/url1'), axios.get('/url2')])
+              .then((res)=>{
+                console.log('모든 요청 성공')
+              })
+              .catch((err)=>{
+                console.log('요청 한개 이상 실패')
+              })
+          }}>더보기</button>
           </>
         }></Route>
         <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>}></Route>
